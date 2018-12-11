@@ -1,5 +1,5 @@
-drop database if exists fooddelivery;
-create database fooddelivery;
+drop database if exists foodDelivery;
+create database foodDelivery;
 use foodDelivery;
 
 

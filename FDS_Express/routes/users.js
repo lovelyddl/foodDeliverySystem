@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var qs = require("querystring");
 var mysql = require('mysql');
 
 var pool = mysql.createPool({  
@@ -8,45 +7,61 @@ var pool = mysql.createPool({
   port     : 3306, // 数据库连接的端口号 默认是3306  
   database : 'fooddelivery', // 需要查询的数据库  
   user     : 'root', // 用户名  
-  password : '19630920' // 密码
+  password : '85622607zxc' // 密码
 });
 
 /* GET users listing. */
-router.get('/login/', function(req, res, next) {
-  let data = req.query
-  // console.log(req.query)
-  res.writeHead(200, {  
-    'Content-Type': 'text/html;charset=utf8',  
-    "Access-Control-Allow-Origin":"http://localhost:3000" //*表示允许的域名地址，本地则为'http://localhost' 不添加此参数 会被认为是跨域  
-  });
-  if (data.userId) {
+router.post('/login', function(req, res, next) {
+  let data = req.body
+  // console.log(data)
+  if (data.userId && data.password) {
     // 使用连接池  
     pool.getConnection(function (err,connection) {
       if(err){  
           console.log('与MySQL数据库建立连接失败！');  
-          console.log('错误信息为：' + err);  
+          console.log('错误信息为：' + err);
+          res.status(500).send({ error: 'fail to connect database' });
       }  
       else {  
           console.log('与MsSQL数据库建立连接成功！');
           let sql = `select loginCheck('${data.userId}', ${data.password});`
           connection.query(sql, function(err, result) {
-          console.log(result)
           if(err){  
               console.log('用户登录失败'); 
-              res.end('{"code": 2}');
-              connection.release(); // 释放连接池的连接，因为连接池默认最大
+              res.status(200).send({code: 1, error: 'Please input correct userID or password' });
+              connection.release(); // 释放连接池的连接
           }  
           else{  
               console.log('用户登录成功成功');
-              res.end('{"code": 1}'); 
+              let saveAccount = {
+                userId: data.userId,
+                password: data.password
+              }
+              req.session.userInfo = saveAccount
+              res.status(200).json({code: 0});
               connection.release();
+              // console.log(req.session.userInfo)
           }
         })
       }
     })
   } else {
-    res.end('{code: 0}');
+    res.status(200).send({code: 1, error: 'Please input correct userID or password' });
   }
 });
+
+router.get('/checkLog', function(req, res, next) {
+  // console.log(req.session.userInfo)
+  if (req.session.userInfo) {
+    res.status(200).json({code: 0, userInfo: req.session.userInfo});
+  } else {
+    res.status(200).json({code: 1, error: 'Please log in agin'});
+  }
+})
+
+router.post('/logout', function(req, res, next) {
+  req.session.userInfo = undefined
+  res.status(200).json({code: 0});
+})
 
 module.exports = router;
