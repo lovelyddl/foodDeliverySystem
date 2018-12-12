@@ -14,7 +14,7 @@ var pool = mysql.createPool({
 router.post('/login', function(req, res, next) {
   let data = req.body
   // console.log(data)
-  if (data.userId && data.password) {
+  if (data.userId && data.password && data.type) {
     // 使用连接池  
     pool.getConnection(function (err,connection) {
       if(err){  
@@ -24,7 +24,14 @@ router.post('/login', function(req, res, next) {
       }  
       else {  
           console.log('与MsSQL数据库建立连接成功！');
-          let sql = `select loginCheck('${data.userId}', ${data.password});`
+          let sql = ''
+          if (data.type === 'userName') {
+            sql = `select logInCheckName('${data.userId}', ${data.password});`
+          } else if (data.type === 'phone') {
+            sql = `select logInCheckPhone('${data.userId}', ${data.password});`
+          } else if (data.type === 'email') {
+            sql = `select logInCheckEmail('${data.userId}', ${data.password});`
+          }
           connection.query(sql, function(err, result) {
           if(err){  
               console.log('用户登录失败'); 
@@ -55,7 +62,7 @@ router.get('/checkLog', function(req, res, next) {
   if (req.session.userInfo) {
     res.status(200).json({code: 0, userInfo: req.session.userInfo});
   } else {
-    res.status(200).json({code: 1, error: 'Please log in agin'});
+    res.status(200).json({code: 1, error: 'Please log in'});
   }
 })
 

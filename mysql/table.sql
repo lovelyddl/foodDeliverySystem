@@ -2,21 +2,31 @@ drop database if exists foodDelivery;
 create database foodDelivery;
 use foodDelivery;
 
-
 drop table if exists  Customers;
 create table Customers (
 cid int primary key auto_increment,
 cname char(100) not null unique,
-cphone int(15) not null,
-cemail char(30) default null,
+cphone int(15) not null unique,
+cemail char(30) default null unique,
 cpassword char(40) not null
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+drop procedure if exists create_customer;
+DELIMITER //
+create procedure create_customer(in user_name char (100), in phone int(15), in email char(30), in user_password char(40))
+begin
+insert into Customers(cname, cphone, cemail, cpassword)
+values(user_name, phone, email, user_password);
+end //
+DELIMITER ;
+
+call create_customer('duoduo', 666666666, 'duoduo@duo.com', '12345678');  
+
 select * from Customers;
 
-drop function if exists logInCheck;
+drop function if exists logInCheckName;
 DELIMITER //
-create function logInCheck
+create function logInCheckName
 ( 
   userName varchar(100),
   userPassword varchar(40)
@@ -33,8 +43,51 @@ begin
 end //
 DELIMITER ;
 
-select logInCheck('duoduo', '12345678');
+select logInCheckName('duoduo', '12345678');
 
+drop function if exists logInCheckPhone;
+DELIMITER //
+create function logInCheckPhone
+( 
+  userPhone int(15),
+  userPassword varchar(40)
+) returns boolean
+begin
+	DECLARE log_check boolean DEFAULT false;
+	if (userPhone in (select cphone from Customers) &&
+	   userPassword = (select cpassword from Customers where cphone = userPhone))
+	then set log_check = true;
+    else SIGNAL SQLSTATE 'ME001'
+				SET MESSAGE_TEXT = 'Given user phone or password is incorrect.';
+	end if;
+	return log_check;
+end //
+DELIMITER ;
+
+select logInCheckPhone(666666666, '12345678');
+
+drop function if exists logInCheckEmail;
+DELIMITER //
+create function logInCheckEmail
+( 
+  userEmail varchar(100),
+  userPassword varchar(40)
+) returns boolean
+begin
+	DECLARE log_check boolean DEFAULT false;
+	if (userEmail in (select cemail from Customers) &&
+	   userPassword = (select cpassword from Customers where cemail = userEmail))
+	then set log_check = true;
+    else SIGNAL SQLSTATE 'ME001'
+				SET MESSAGE_TEXT = 'Given user email or password is incorrect.';
+	end if;
+	return log_check;
+end //
+DELIMITER ;
+
+select logInCheckEmail('duoduo@duo.com', '12345678');
+
+-- the above code was changed by Frank
 
 drop table if exists  Deliverymen;
 create table Deliverymen(

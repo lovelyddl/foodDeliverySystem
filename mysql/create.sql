@@ -1,14 +1,5 @@
 use foodDelivery;
-drop procedure if exists create_customer;
-DELIMITER //
-create procedure create_customer(in user_name char (50), in phone char(50), in email char(80), in user_password int8)
-begin
-insert into Customers(cname, cphone, cemail, cpassword)
-values(user_name, phone, email, user_password);
-end //
-DELIMITER ;
 
-call create_customer('duoduo', '666666666', 'duoduo@duo.com', '12345678');  
 
 drop procedure if exists create_reviews;
 DELIMITER //
