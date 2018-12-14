@@ -26,7 +26,7 @@ values(user_name, phone, email, user_password);
 end //
 DELIMITER ;
 
-call create_admin('cuteduo', 6666666666, 'cuteduo@duo.com', 'cuteduoduo');  
+call create_admin('cuteduo', 9999999999, 'cuteduo@duo.com', 'cuteduoduo');  
 call create_admin('bestlei', 8888888888, 'bestlei@lei.com', 'bestleilei'); 
 
 -- ---------------------------------   Customer operations   ---------------------------------
@@ -53,12 +53,12 @@ values(user_name, phone, email, user_password);
 end //
 DELIMITER ;
 
-call create_customer('duoduo', 666666666, 'duoduo@duo.com', '12345678');  
--- call create_customer('duoduo211', 1234567811901, 'duod1hhuo@1duo.com', '12345678'); 
+call create_customer('jingyi', 4444444444, 'jingyi@jy.com', '12345678');
+call create_customer('houyi', 5555555555, 'houyi@hou.com', '12345678');
 
 select * from Customers;
-select * from Customers where cname = 'duoduo';
-select * from Customers where cphone = 666666666;
+select * from Customers where cname = 'houyi';
+select * from Customers where cphone = 5555555555;
 
 -- ---------------------------------   Deliverymen operations   ---------------------------------
 drop table if exists  Deliverymen;
@@ -80,8 +80,8 @@ insert into Deliverymen(dname, dphone, demail, dpassword) values(user_name, phon
 end //
 DELIMITER ;
 
-call create_deliverymen('yuaiai', 777777777, 'yu@yu.com', '12345678');
--- call create_deliverymen('yuaiai12', 777337777, 'yu12@yu.com', '12345678');
+-- call create_deliverymen('yuaiai', 3333333333, 'yu@yu.com', '12345678');
+
 select * from Deliverymen;
 
 -- ---------------------------------   logIn operations   ---------------------------------
@@ -117,8 +117,8 @@ begin
 end //
 DELIMITER ;
 
-select logInCheckName('duoduo', '12345678', 'customer');
-select logInCheckName('yuaiai', '12345678', 'deliveryMan');
+select logInCheckName('houyi', '12345678', 'customer');
+-- select logInCheckName('yuaiai', '12345678', 'deliveryMan');
 
 drop function if exists logInCheckPhone;
 DELIMITER //
@@ -152,8 +152,8 @@ begin
 end //
 DELIMITER ;
 
-select logInCheckPhone(666666666, '12345678', 'customer');
-select logInCheckPhone(777777777, '12345678', 'deliveryMan');
+select logInCheckPhone(4444444444, '12345678', 'customer');
+-- select logInCheckPhone(3333333333, '12345678', 'deliveryMan');
 
 drop function if exists logInCheckEmail;
 DELIMITER //
@@ -187,8 +187,8 @@ begin
 end //
 DELIMITER ;
 
-select logInCheckEmail('duoduo@duo.com', '12345678', 'customer');
-select logInCheckEmail('yu@yu.com', '12345678', 'deliveryMan');
+select logInCheckEmail('houyi@hou.com', '12345678', 'customer');
+-- select logInCheckEmail('yu@yu.com', '12345678', 'deliveryMan');
 
 
 -- ---------------------------------   Mangagers operations   ---------------------------------
@@ -211,7 +211,9 @@ values(user_name, phone, email, user_password);
 end //
 DELIMITER ;
 
-call create_manager('maomao','888888888','mao@mao.com',12345678);  
+call create_manager('managerlei',7777777777,'managerlei@lei.com', 'managerlei');  
+call create_manager('managerduo',6666666666,'managerduo@duo.com', 'managerduo');  
+
 
 -- ---------------------------------   Restaurants operations   ---------------------------------
 
@@ -224,7 +226,7 @@ zipcode int not null,
 restype char(30) not null,
 opentime char(100) not null,
 managerid int default null,
-constraint mfk foreign key(managerid) references Managers(managerid) on delete cascade on update cascade
+constraint mfk foreign key(managerid) references Managers(managerid) on delete set null on update cascade
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -239,18 +241,67 @@ DELIMITER ;
 
 select * from Restaurants;
 
-call create_restaurant('Qdoba', '393 Huntington Ave, Boston, MA',02115, 'Mexican', '10am to 10pm', 1);  
+call create_restaurant('Qdoba', '393 Huntington Ave, Boston, MA',02115, 'Mexican', '10am to 10pm', 2);  
 call create_restaurant('Ginger Exchange', '250 Huntington Ave, Boston, MA',02115, 'Vietnamese', '11:30am to 11pm', 1);  
 call create_restaurant('Ichiban Yakitori Sushi House', '14 Westland Ave, Boston, MA',02115, 'Yakitori, Japanese', '11:30am to 10pm', 1);  
-call create_restaurant('Gyu-Kaku Japanese BBQ', '16-18 Eliot St, Cambridge, MA', 02138, 'Japanese', '11"30am to 10:30pm', 1);  
+call create_restaurant('Gyu-Kaku Japanese BBQ', '16-18 Eliot St, Cambridge, MA', 02138, 'Japanese', '11"30am to 10:30pm', 2);  
 call create_restaurant('Hokkaido Santouka Ramen', '1 Bow St, Cambridge, MA',02138, 'Ramen', '11am to 9:30pm', 1);  
-call create_restaurant('The Hourly Oyster House', '15 Dunster St, Cambridge, MA',02138, 'Seafood, Oyster, Bar', '11am to 12am', 1);  
-call create_restaurant('Hanmaru', '168 Harvard Ave, Allston, MA', 02134, 'Korean', '11am to 10pm', 1);  
-call create_restaurant('Kaju Tofu House', '56 Harvard Ave, Allston, MA',02134, 'Korean', '11am to 10pm', 1);  
-call create_restaurant('FIve Spices House', '58 Beach St, Boston, MA',02111, 'Chinese', '11am to 10:45pm', 1);  
-call create_restaurant('Hi B3ar Ice Cream Roll', '147 Brighton Ave, Allston, MA',02134, 'Ice Cream', '11:30am to 11pm', 1);  
+call create_restaurant('The Hourly Oyster House', '15 Dunster St, Cambridge, MA',02138, 'Seafood, Oyster, Bar', '11am to 12am', 2);  
+call create_restaurant('Hanmaru', '168 Harvard Ave, Allston, MA', 02134, 'Korean', '11am to 10pm', 2);  
+call create_restaurant('Kaju Tofu House', '56 Harvard Ave, Allston, MA',02134, 'Korean', '11am to 10pm', 2);  
+call create_restaurant('FIve Spices House', '58 Beach St, Boston, MA',02111, 'Chinese', '11am to 10:45pm', 2);  
+call create_restaurant('Hi B3ar Ice Cream Roll', '147 Brighton Ave, Allston, MA',02134, 'Ice Cream', '11:30am to 11pm', 2);  
+call create_restaurant('Duoduo Fat foods', '920 Love St, Boston, MA', 94520, 'Fat Food', '24 Hours', 2);
+call create_restaurant('Leilei Healthy foods', '226 Love St, Boston, MA', 94520, 'Healthy', '24 Hours', 1);
+
+-- ---------------------------------   Menus operations   ---------------------------------
+
+drop table if exists  Menus;
+create table Menus(
+menuid int primary key auto_increment,
+menuname char(30) not null,
+rid int not null,
+constraint resfk foreign key(rid) references Restaurants(rid) on delete cascade on update cascade
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+drop procedure if exists create_menu;
+DELIMITER //
+create procedure create_menu(in menuname char (30), in rid int)
+begin
+insert into Menus(menuname, rid)
+values(menuname, rid);
+end //
+DELIMITER ;
+
+call create_menu('Fast Foods', 11); 
+call create_menu('Create your own bowl', 1);
 
 
+-- ---------------------------------   Food operations   ---------------------------------
+
+drop table if exists Food;
+create table Food (
+fid int primary key auto_increment,
+menuid int not null,
+fname char(50) not null,
+price double not null,
+constraint menufk foreign key(menuid) references Menus(menuid) on delete cascade on update cascade
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+drop procedure if exists create_food;
+DELIMITER //
+create procedure create_food(in menuid int, in fname char (50), in price double)
+begin
+insert into Food(menuid, fname,price)
+values(menuid, fname, price);
+end //
+DELIMITER ;
+
+call create_food(1, 'pizza',10.99); 
+call create_food(2, 'regular bowl',8.75);
+call create_food(1, 'coke',1.59);
+call create_food(1, 'fried chicken',7.99);
+call create_food(2, 'rice noodle',6.95); 
 
 -- ---------------------------------   the above code was changed by Frank   ---------------------------------
 /*
