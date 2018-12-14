@@ -26,7 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // 统一设置返回请求头，返回的Header中设置 Access-Control-Allow-Origin 这个信息
 app.use("*", function (req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', "http://localhost:3000");
+  res.setHeader('Access-Control-Allow-Origin', " http://localhost:3000");
   // http://www.bowenfirstweb.xyz
   //告诉客户端可以在HTTP请求中带上Cookie
   res.setHeader('Access-Control-Allow-Credentials', true);

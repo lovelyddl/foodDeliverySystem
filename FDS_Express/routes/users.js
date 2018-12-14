@@ -4,21 +4,31 @@ const querySql = require('../routes/sqlQuery');
 
 /* GET users listing. */
 router.post('/login', async function(req, res, next) {
-  let data = req.body
+  let data = req.body;
   // console.log(data)
-  if (data.userId && data.password && data.type) {
-    let sql = ''
-    if (data.type === 'userName') {
-      sql = `select logInCheckName('${data.userId}', ${data.password}, 'customer');`
-    } else if (data.type === 'phone') {
-      sql = `select logInCheckPhone('${data.userId}', ${data.password}, 'customer');`
-    } else if (data.type === 'email') {
-      sql = `select logInCheckEmail('${data.userId}', ${data.password}, 'customer');`
+  if (data.userId && data.password && data.type && data.role) {
+    let checkLogMethod = [
+      { type: 'userName', log: 'logInCheckName'}, 
+      { type: 'phone', log: 'logInCheckPhone' }, 
+      { type: 'email', log: 'logInCheckEmail'}
+    ];
+    let sql = '';
+    for (let i = 0; i < 3; i++) {
+      let item = checkLogMethod[i];
+      if (item.type === data.type) {
+        sql = `select ${item.log}('${data.userId}', ${data.password}, '${data.role}');`;
+        break;
+      }
     }
     try {
       let sqlResult = await querySql(sql);
       console.log(sqlResult)
       if (sqlResult.code === 0) {
+        req.session.userInfo = {
+          userId: data.userId,
+          password: data.password,
+          role: data.role
+        }
         res.status(200).json({code: 0});
       }
     } catch (error) {
@@ -44,14 +54,15 @@ router.get('/checkLog', function(req, res, next) {
 })
 
 router.post('/logout', function(req, res, next) {
-  req.session.userInfo = undefined
+  req.session.userInfo = undefined;
   res.status(200).json({code: 0});
 })
 
 const isValidRegister = async function(data) {
-  let checkNameSql = `select * from Customers where cname = '${data.userName}';`;
-  let checkPhoneSql = `select * from Customers where cphone = ${data.phone};`;
-  let checkEmailSql = `select * from Customers where cemail = '${data.email}';`;
+  let table = data.role === 'customer' ? 'Customers' : 'Deliverymen';
+  let checkNameSql = `select * from ${table} where cname = '${data.userName}';`;
+  let checkPhoneSql = `select * from ${table} where cphone = ${data.phone};`;
+  let checkEmailSql = `select * from ${table} where cemail = '${data.email}';`;
   let checkArraySql = [checkNameSql, checkPhoneSql, checkEmailSql];
   let checksSql = ['userName', 'phone', 'email'];
   let messageList = [];
@@ -66,7 +77,7 @@ const isValidRegister = async function(data) {
         }
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
   messsage = messageList.join(", ");
@@ -75,8 +86,13 @@ const isValidRegister = async function(data) {
 
 router.post('/signup', async function(req, res, next) {
   let data = req.body
-  if (data.userName && data.phone && data.email && data.password) {
-    let sql = `call create_customer('${data.userName}', ${data.phone}, '${data.email}', '${data.password}');`
+  if (data.userName && data.phone && data.email && data.password, data.role) {
+    let sql = '';
+    if (data.role === 'customer') {
+      sql = `call create_customer('${data.userName}', ${data.phone}, '${data.email}', '${data.password}');`
+    } else if (data.role === 'deliveryMan') {
+      sql = `call create_deliverymen('${data.userName}', ${data.phone}, '${data.email}', '${data.password}');`
+    }
     let errorMessage = await isValidRegister(data);
     if (errorMessage === '') {
       try {

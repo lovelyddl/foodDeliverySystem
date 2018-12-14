@@ -10,27 +10,7 @@ values(cid,rid,review);
 end //
 DELIMITER ;
 
-drop procedure if exists create_manager;
-DELIMITER //
-create procedure create_manager(in user_name char (50), in phone char(50), in email char(80), in user_password int8)
-begin
-insert into Managers(mname,mphone,memail,mpassword)
-values(user_name, phone,email,user_password);
-end //
-DELIMITER ;
 
-call create_manager('maomao','888888888','mao@mao.com',12345678);  
-
-drop procedure if exists create_deliverymen;
-DELIMITER //
-create procedure create_deliverymen(in name char (50), in phone char(50), in email char(80), in password int8)
-begin
-insert into Deliverymen(dname,dphone,demail,dpassword)
-values(name, phone,email,password);
-end //
-DELIMITER ;
-
-call create_deliverymen('yuaiai','777777777','yu@yu.com',12345678);
 
 
 drop procedure if exists create_restaurant;
