@@ -2,6 +2,33 @@ drop database if exists foodDelivery;
 create database foodDelivery;
 use foodDelivery;
 
+-- ---------------------------------   Admin operations   ---------------------------------
+drop table if exists  Admins;
+create table Admins (
+	aid int primary key auto_increment,
+	aname char(100) not null unique,
+	aphone char(15) not null unique,
+	aemail char(80) default null unique,
+	apassword char(40) not null
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+drop procedure if exists create_admin;
+DELIMITER //
+create procedure create_admin(
+	in user_name char (100), 
+	in phone char(15), 
+	in email char(80), 
+	in user_password char(40)
+)
+begin
+insert into Admins(aname, aphone, aemail, apassword)
+values(user_name, phone, email, user_password);
+end //
+DELIMITER ;
+
+call create_admin('cuteduo', 6666666666, 'cuteduo@duo.com', 'cuteduoduo');  
+call create_admin('bestlei', 8888888888, 'bestlei@lei.com', 'bestleilei'); 
+
 -- ---------------------------------   Customer operations   ---------------------------------
 drop table if exists  Customers;
 create table Customers (
@@ -161,6 +188,41 @@ DELIMITER ;
 
 select logInCheckEmail('duoduo@duo.com', '12345678', 'customer');
 select logInCheckEmail('yu@yu.com', '12345678', 'deliveryMan');
+
+-- ---------------------------------   Restaurants operations   ---------------------------------
+
+drop table if exists Restaurants;
+create table Restaurants(
+rid int primary key auto_increment,
+rname char(20) not null,
+address char(30) not null,
+zipcode int not null,
+restype char(50) not null,
+opentime char(30) not null,
+managerid int default null,
+constraint mfk foreign key(managerid) references Managers(managerid) on delete cascade on update cascade
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+drop procedure if exists create_restaurant;
+DELIMITER //
+create procedure create_restaurant(in rname char (50), in address char(50), in zipcode int, in restype char(50), in opentime char(30), in managerid int)
+begin
+insert into Restaurants(rname, address, zipcode, restype, opentime, managerid)
+values(rname, address, zipcode, restype, opentime, managerid);
+end //
+DELIMITER ;
+
+call create_restaurant('Qdoba', '393 Huntington Ave, Boston, MA',02115, 'Mexican', '10am to 10pm', 1);  
+call create_restaurant('Ginger Exchange', '250 Huntington Ave, Boston, MA',02115, 'Vietnamese', '11:30am to 11pm', 2);  
+call create_restaurant('Ichiban Yakitori Sushi House', '14 Westland Ave, Boston, MA',02115, 'Yakitori, Japanese', '11:30am to 10pm', 3);  
+call create_restaurant('Gyu-Kaku Japanese BBQ', '16-18 Eliot St, Cambridge, MA', 02138, 'Japanese', '11"30am to 10:30pm', 3);  
+call create_restaurant('Hokkaido Santouka Ramen', '1 Bow St, Cambridge, MA',02138, 'Ramen', '11am to 9:30pm', 4);  
+call create_restaurant('The Hourly Oyster House', '15 Dunster St, Cambridge, MA',02138, 'Seafood, Oyster, Bar', '11am to 12am', 5);  
+call create_restaurant('Hanmaru', '168 Harvard Ave, Allston, MA', 02134, 'Korean', '11am to 10pm', 6);  
+call create_restaurant('Kaju Tofu House', '56 Harvard Ave, Allston, MA',02134, 'Korean', '11am to 10pm', 6);  
+call create_restaurant('FIve Spices House', '58 Beach St, Boston, MA',02111, 'Chinese', '11am to 10:45pm', 7);  
+call create_restaurant('Hi B3ar Ice Cream Roll', '147 Brighton Ave, Allston, MA',02134, 'Ice Cream', '11:30am to 11pm', 8);  
 
 
 -- ---------------------------------   the above code was changed by Frank   ---------------------------------
