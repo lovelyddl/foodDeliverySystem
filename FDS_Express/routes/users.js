@@ -5,25 +5,21 @@ const querySql = require('../routes/sqlQuery');
 /* GET users listing. */
 router.post('/login', async function(req, res, next) {
   let data = req.body;
-  let sql = '';
+  // let sql = `select cpassword from Customers where cname = userName`;
   // console.log(data)
   if (data.userId && data.password && data.type && data.role) {
-    let checkLogMethod = [
-      { type: 'userName', log: 'logInCheckName'}, 
-      { type: 'phone', log: 'logInCheckPhone' }, 
-      { type: 'email', log: 'logInCheckEmail'}
-    ];
-    for (let i = 0; i < 3; i++) {
-      let item = checkLogMethod[i];
-      if (item.type === data.type) {
-        sql = `select ${item.log}('${data.userId}', ${data.password}, '${data.role}');`;
-        break;
-      }
+    let checkNames = {
+      customer: { userName: 'cname', phone: 'cphone', email: 'cemail', table: 'Customers', pass: 'cpassword' },
+      deliveryMan: { userName: 'cname', phone: 'cphone', email: 'cemail', table: 'Deliverymen', pass: 'dpassword' }
     }
+    let userType = checkNames[data.role];
+    let findPassSql = `select ${userType.pass} from ${userType.table} where ${userType[data.type]} = '${data.userId}'`;
     try {
-      let sqlResult = await querySql(sql);
-      console.log(sqlResult)
-      if (sqlResult.code === 0) {
+      console.log(findPassSql);
+      let sqlResult = await querySql(findPassSql);
+      let sqlValue = JSON.parse(JSON.stringify(sqlResult.data));
+      console.log(sqlValue[0][userType.pass])
+      if (sqlResult.code === 0 && sqlValue[0][userType.pass] === data.password) {
         req.session.userInfo = {
           userId: data.userId,
           password: data.password,
