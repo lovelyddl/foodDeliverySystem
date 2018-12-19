@@ -118,7 +118,7 @@ end //
 DELIMITER ;
 
 select logInCheckName('houyi', '12345678', 'customer');
--- select logInCheckName('yuaiai', '12345678', 'deliveryMan');
+select logInCheckName('yuaiai', '12345678', 'deliveryMan');
 
 drop function if exists logInCheckPhone;
 DELIMITER //
@@ -153,7 +153,7 @@ end //
 DELIMITER ;
 
 select logInCheckPhone(4444444444, '12345678', 'customer');
--- select logInCheckPhone(3333333333, '12345678', 'deliveryMan');
+select logInCheckPhone(3333333333, '12345678', 'deliveryMan');
 
 drop function if exists logInCheckEmail;
 DELIMITER //
@@ -188,7 +188,7 @@ end //
 DELIMITER ;
 
 select logInCheckEmail('houyi@hou.com', '12345678', 'customer');
--- select logInCheckEmail('yu@yu.com', '12345678', 'deliveryMan');
+select logInCheckEmail('yu@yu.com', '12345678', 'deliveryMan');
 
 
 -- ---------------------------------   Mangagers operations   ---------------------------------
@@ -251,30 +251,43 @@ call create_restaurant('Hanmaru', '168 Harvard Ave, Allston, MA', 02134, 'Korean
 call create_restaurant('Kaju Tofu House', '56 Harvard Ave, Allston, MA',02134, 'Korean', '11am to 10pm', 2);  
 call create_restaurant('FIve Spices House', '58 Beach St, Boston, MA',02111, 'Chinese', '11am to 10:45pm', 2);  
 call create_restaurant('Hi B3ar Ice Cream Roll', '147 Brighton Ave, Allston, MA',02134, 'Ice Cream', '11:30am to 11pm', 2);  
-call create_restaurant('Duoduo Fat foods', '920 Love St, Boston, MA', 94520, 'Fat Food', '24 Hours', 2);
-call create_restaurant('Leilei Healthy foods', '226 Love St, Boston, MA', 94520, 'Healthy', '24 Hours', 1);
+call create_restaurant('Duoduo Fat Foods', '920 Love St, Boston, MA', 94520, 'Fat Food', '24 Hours', 2);
+call create_restaurant('Leilei Healthy Foods', '226 Love St, Boston, MA', 94520, 'Healthy', '24 Hours', 1);
+call create_restaurant('The Q', '660 Washington St, Boston, MA', 02111, 'Hot Pot, Chinese', '11:30am to 11pm', 2);
 
 -- ---------------------------------   Menus operations   ---------------------------------
 
 drop table if exists  Menus;
 create table Menus(
 menuid int primary key auto_increment,
-menuname char(30) not null,
+menuname char(50) not null,
 rid int not null,
 constraint resfk foreign key(rid) references Restaurants(rid) on delete cascade on update cascade
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 drop procedure if exists create_menu;
 DELIMITER //
-create procedure create_menu(in menuname char (30), in rid int)
+create procedure create_menu(in menuname char (50), in rid int)
 begin
 insert into Menus(menuname, rid)
 values(menuname, rid);
 end //
 DELIMITER ;
 
-call create_menu('Fast Foods', 11); 
-call create_menu('Create your own bowl', 1);
+call create_menu('Qdoba Mexican Eats', 1);
+call create_menu('Ginger Exchange Menu', 2); 
+call create_menu('Ichiban Yakitori Sushi House Menu', 3); 
+call create_menu('Gyu-Kaku Happy Hour Menu', 4); 
+call create_menu('Hokkaido Santouka Ramen', 5); 
+call create_menu('The Hourly Oyster House', 6); 
+call create_menu('Hanmaru Menu', 7); 
+call create_menu('Kaju Tofu House', 8); 
+call create_menu('FIve Spices House', 9); 
+call create_menu('Hi B3ar Ice Cream Roll', 10); 
+call create_menu('Duoduo Fat Foods Collection', 11); 
+call create_menu('Leilei Healthy Foods Collection', 12); 
+call create_menu('The Q Hot Pot Menu', 13); 
+
 
 
 -- ---------------------------------   Food operations   ---------------------------------
@@ -297,13 +310,176 @@ values(menuid, fname, price);
 end //
 DELIMITER ;
 
-call create_food(1, 'pizza',10.99); 
-call create_food(2, 'regular bowl',8.75);
-call create_food(1, 'coke',1.59);
-call create_food(1, 'fried chicken',7.99);
-call create_food(2, 'rice noodle',6.95); 
+-- for 1 - Qdoba
+call create_food(1, 'Knockout Tacos',3.50); 
+call create_food(1, 'Burrito-Vegetarian',7.20);
+call create_food(1, 'Burrito-Grilled Steak',8.70);
+call create_food(1, 'Burrito-Brisket',8.70);
+call create_food(1, 'Burrito-Pork',8.70);
+call create_food(1, 'Quesadilla-Chicken',8.10);
+call create_food(1, 'Quesadilla-Steak',8.70);
+call create_food(1, 'Quesadilla-Ground Beef',8.10); 
+call create_food(1, 'Taco Salad',7.20); 
+call create_food(1, 'Chips & Guacamole',3.00); 
+call create_food(1, 'A Cup of Drink',1.89);
 
--- ---------------------------------   the above code was changed by Frank   ---------------------------------
+-- for 2 - Ginger Exchange
+call create_food(2, 'WOW Wings - 8 Wings',11.95); 
+call create_food(2, 'Korean Loaded Fries!',9.95);
+call create_food(2, 'Bibimbap - Beef',15.25);
+call create_food(2, 'Bibimbap - Chicken',13.25);
+call create_food(2, 'Pineapple Fried Rice',13.70);
+call create_food(2, 'Orange Chicken',12.70);
+call create_food(2, 'Drunkard Noodles',11.95);
+call create_food(2, 'Sushi Dinner',22.95);
+call create_food(2, 'Sushi & Sashimi Dinner',12.95);
+call create_food(2, 'Thai Iced Tear',3.75);
+
+-- for 3 - Ichiban
+call create_food(3, 'Chicken Teriyaki',9.00); 
+call create_food(3, 'Pork Katsu',9.00);
+call create_food(3, 'Salmon Teriyaki ',9.00);
+call create_food(3, 'Tempura',9.00);
+call create_food(3, 'Kalbi',10.00);
+call create_food(3, 'Bulgogi',10.00);
+call create_food(3, 'Sake Lunch Set ',12.95);
+call create_food(3, 'Super Ichiban Set',15.00);
+call create_food(3, 'Yaki Udon (choice)',9.25);
+call create_food(3, 'Soda',1.25);
+
+-- for 4 - GYU-kaku
+call create_food(4, 'Spicy Cold Tofu',4.00); 
+call create_food(4, 'Iced Tea',2.25); 
+call create_food(4, 'Shrimp & Mushroom Ahijo',8.00);
+call create_food(4, 'Japanese Fried Chicken',6.50);
+call create_food(4, 'Chili Shrimp Shumai',7.00);
+call create_food(4, 'Kobe Style Kalbi Short Rib',26.00);
+call create_food(4, 'Beef Tongue',10.00);
+call create_food(4, 'Harami In Secret Pot ',26.95);
+call create_food(4, 'Garlic Shoyu Ribeye',6.00);
+call create_food(4, 'Lady M Green Tea Mille w/ Ice Cream',11.00);
+
+-- for 5 - Santouka Ramen 
+call create_food(5, 'Shio ramen',12.95); 
+call create_food(5, 'Shoyu ramen',11.80);
+call create_food(5, 'Miso ramen',12.50);
+call create_food(5, 'Spicy miso ramen',13.24);
+call create_food(5, 'Char siu ramen',11.85);
+call create_food(5, 'Tokusen toroniku ramen',12.35);
+call create_food(5, 'Tokusen toroniku ',6.95);
+call create_food(5, 'Hanjuku tamago',3.00);
+call create_food(5, 'Yaki gyoza',8.95);
+
+-- for 6 - Hourly Oyster House
+call create_food(6, 'CLAM CHOWDER',9.00); 
+call create_food(6, 'LOBSTER BISQUE',10.00);
+call create_food(6, 'BAKED OYSTERS',14.50);
+call create_food(6, 'FRIED CALAMARI',13.25);
+call create_food(6, 'LOBSTER ROLL',28);
+call create_food(6, 'THE HOURLY BURGER',14);
+call create_food(6, 'SEAFOOD PASTA ',16.25);
+call create_food(6, 'PAN ROASTED CHILI LOBSTER',30.00);
+call create_food(6, 'CLASSIC CAESAR SALAD',10.95);
+
+-- for 7 - Hanmaru
+call create_food(7, 'Kimchi Pancake',10.95); 
+call create_food(7, 'Ramen Salad',9.95);
+call create_food(7, 'Kimchi Chigae',11.95);
+call create_food(7, 'Jampong',12.25);
+call create_food(7, 'Gamjatang - Set A',34.95);
+call create_food(7, 'Gamjatang - Set A',28.95);
+call create_food(7, 'Budae Jungol ',28.95);
+call create_food(7, 'Soft Tofu Jungol',29.95);
+call create_food(7, 'Bulgogi Jungol',33.95);
+call create_food(7, 'Juice',2.95);
+
+-- for 8 - Kaju Tofu
+call create_food(8, 'Seafood & Beef Tofu',11.95); 
+call create_food(8, 'Kimchi & Beef Tofu',12.95);
+call create_food(8, 'Vegetable Tofu',10.95);
+call create_food(8, 'Galbi (4 Strips)',19.25);
+call create_food(8, 'Hot - Stone Bulgogi',19.95);
+call create_food(8, 'Tofu & Beef B.B.Q Ribs',17.99);
+call create_food(8, 'Tofu & Pork Belly ',17.95);
+call create_food(8, 'Short Rib Meat Clay Pot',19.95);
+call create_food(8, 'Seafood Clay Pot',12.95);
+call create_food(8, 'Soda',1.95);
+
+-- for 9 - FIve Spices House
+call create_food(9, 'Szechuan Spicy Pork Dumpling',7.95); 
+call create_food(9, 'Dan Dan Noodle',7.95);
+call create_food(9, 'Tomato and Fried Stirred Egg Soup',8.95);
+call create_food(9, 'White Rice',1.50);
+call create_food(9, 'Soy Milk',2.50);
+call create_food(9, 'Lo Mein',8.95);
+call create_food(9, 'Scallion Pancakes ',5.95);
+call create_food(9, 'Salt and Pepper Shrimp',19.95);
+call create_food(9, 'Mo Po Tofu',10.95);
+call create_food(9, 'Shredded Potato with Spicy Green Peppers',9.95);
+
+-- for 10 - Ice Cream Roll
+call create_food(10, 'Key Lime Pie',6.95); 
+call create_food(10, 'Cookie Monster',6.95);
+call create_food(10, 'Morning Call',6.95);
+call create_food(10, 'Evil Berry ',6.95);
+call create_food(10, 'Mango Tango',6.95);
+call create_food(10, 'Pina Colada',6.95);
+call create_food(10, 'Matcha Lady ',6.95);
+call create_food(10, 'Monkey Lover',6.95);
+call create_food(10, 'First Kiss',6.95);
+call create_food(10, 'Sweet Heart',6.95);
+
+-- for 11 - Duoduo fat food
+call create_food(11, 'Pizza',6.95); 
+call create_food(11, 'Beef Burger',9.95);
+call create_food(11, 'Fries',4.95);
+call create_food(11, 'Instant Noodle',7.95);
+call create_food(11, 'Coke Cola',1.95);
+call create_food(11, 'Doritos',1.89);
+call create_food(11, 'Chocolate Cookie',3.95);
+call create_food(11, 'Burble Tea',5.95);
+call create_food(11, 'Chocolate Ice Cream',5.95);
+call create_food(11, 'Lobster and Crab Roll',19.95);
+
+-- for 12 - Leilei Healthy food
+call create_food(12, 'Rice Bowl',6.95); 
+call create_food(12, 'Boiled Vegetable',9.95);
+call create_food(12, 'Wheat Toast',3.95);
+call create_food(12, 'Green Tea',2.95);
+call create_food(12, 'Chicken Salad',8.95);
+call create_food(12, 'Boiled Eggs',2.50);
+call create_food(12, 'Plain Yogurt',1.95);
+call create_food(12, 'Vegetable soup',5.95);
+call create_food(12, 'Non-fat Milk',5.95);
+call create_food(12, 'Low-Calories Cereal ',4.95);
+
+-- for 13 - The Q
+call create_food(13, 'Szechuan Chili Broth',8.00); 
+call create_food(13, 'Creazy Mala Broth',8.00);
+call create_food(13, 'Tomato Broth',5.00);
+call create_food(13, 'Black Bone Chicken Broth',3.00);
+call create_food(13, 'Beef and Lamb',22.50);
+call create_food(13, 'Supreme Seafood',20.95);
+call create_food(13, 'Angus Sirloin ',17.95);
+call create_food(13, 'High Chioce Lamb',17.95);
+call create_food(13, 'S.T. Noodles',2.95);
+call create_food(13, 'Cellophane Noodles',2.95);
+call create_food(13, 'Fish Cake',3.50);
+call create_food(13, 'Tongho',4.95);
+call create_food(13, 'A Choy',4.00);
+call create_food(13, 'Potatoes',3.00);
+call create_food(13, 'Corns On The Cob',2.95);
+call create_food(13, 'Fried Gluten Balls',2.95);
+call create_food(13, 'Mushroom',6.50);
+call create_food(13, 'Tofu Platter',6.95);
+call create_food(13, 'Fried Tofu Skin',6.00);
+call create_food(13, 'Dried Bean Curd',4.00);
+call create_food(13, 'Iced Bean Curd',4.00);
+call create_food(13, 'Udon',2.95);
+
+
+
+-- ---------------------------------   the above code was changed by Frank and his bunny  ---------------------------------
 /*
 
 
