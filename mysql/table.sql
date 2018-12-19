@@ -74,13 +74,13 @@ create table Deliverymen(
 
 drop procedure if exists create_deliverymen;
 DELIMITER //
-create procedure create_deliverymen(in user_name char (100), in phone int(15), in email char(80), in user_password char(40))
+create procedure create_deliverymen(in user_name char (100), in phone char(15), in email char(80), in user_password char(40))
 begin
 insert into Deliverymen(dname, dphone, demail, dpassword) values(user_name, phone, email, user_password);
 end //
 DELIMITER ;
 
--- call create_deliverymen('yuaiai', 3333333333, 'yu@yu.com', '12345678');
+call create_deliverymen('yuaiai', 3333333333, 'yu@yu.com', '12345678');
 
 select * from Deliverymen;
 

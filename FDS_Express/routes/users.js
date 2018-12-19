@@ -5,6 +5,7 @@ const querySql = require('../routes/sqlQuery');
 /* GET users listing. */
 router.post('/login', async function(req, res, next) {
   let data = req.body;
+  let sql = '';
   // console.log(data)
   if (data.userId && data.password && data.type && data.role) {
     let checkLogMethod = [
@@ -12,7 +13,6 @@ router.post('/login', async function(req, res, next) {
       { type: 'phone', log: 'logInCheckPhone' }, 
       { type: 'email', log: 'logInCheckEmail'}
     ];
-    let sql = '';
     for (let i = 0; i < 3; i++) {
       let item = checkLogMethod[i];
       if (item.type === data.type) {
