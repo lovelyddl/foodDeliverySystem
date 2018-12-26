@@ -7,7 +7,7 @@ var pool = mysql.createPool({
   port     : 3306, // 数据库连接的端口号 默认是3306  
   database : 'fooddelivery', // 需要查询的数据库  
   user     : 'root', // 用户名  
-  password : '85622607zxc' // 密码
+  password : '19630920' // 密码 // 19630920 85622607zxc
 });
 
 const querySql = (sql) => {

@@ -5,34 +5,38 @@ const querySql = require('../routes/sqlQuery');
 /* GET users listing. */
 router.post('/login', async function(req, res, next) {
   let data = req.body;
-  // let sql = `select cpassword from Customers where cname = userName`;
   // console.log(data)
   if (data.userId && data.password && data.type && data.role) {
     let checkNames = {
       customer: { userName: 'cname', phone: 'cphone', email: 'cemail', table: 'Customers', pass: 'cpassword' },
-      deliveryMan: { userName: 'cname', phone: 'cphone', email: 'cemail', table: 'Deliverymen', pass: 'dpassword' }
+      deliveryMan: { userName: 'dname', phone: 'dphone', email: 'demail', table: 'Deliverymen', pass: 'dpassword' },
+      manager: { userName: 'mname', phone: 'mphone', email: 'memail', table: 'Managers', pass: 'mpassword' },
+      admin: { userName: 'aname', phone: 'aphone', email: 'aemail', table: 'Admins', pass: 'apassword' }
     }
     let userType = checkNames[data.role];
-    let findPassSql = `select ${userType.pass} from ${userType.table} where ${userType[data.type]} = '${data.userId}'`;
+    let findPassSql = `select ${userType.pass}, ${userType['userName']} from ${userType.table} where ${userType[data.type]} = '${data.userId}'`;
     try {
       console.log(findPassSql);
       let sqlResult = await querySql(findPassSql);
       let sqlValue = JSON.parse(JSON.stringify(sqlResult.data));
-      console.log(sqlValue[0][userType.pass])
-      if (sqlResult.code === 0 && sqlValue[0][userType.pass] === data.password) {
+      console.log(sqlValue[0])
+      if (sqlResult.code === 0 && sqlValue[0][userType.pass] !== undefined && sqlValue[0][userType.pass] === data.password && sqlValue[0][userType['userName']] !== undefined) {
         req.session.userInfo = {
           userId: data.userId,
           password: data.password,
-          role: data.role
+          role: data.role,
+          userName: sqlValue[0][userType['userName']]
         }
-        res.status(200).json({code: 0});
+        res.status(200).json({code: 0, userInfo: req.session.userInfo});
+      } else {
+        res.status(200).send({code: 1, error: 'Please input correct userID or password' });
       }
     } catch (error) {
       console.log(error)
       if (error.code === 1) {
         res.status(200).send({code: 1, error: error.message });
-      } else if (error.code === 2) {
-        res.status(200).send({code: 1, error: 'Please input correct userID or password' });
+      } else {
+        res.status(200).send({code: 1, error: 'Please select correct user role' });
       }
     }
   } else {
