@@ -150,7 +150,7 @@ call create_restaurant('The Q', '660 Washington St, Boston, MA', 02111, 'Hot Pot
 
 -- ---------------------------------   Menus operations   ---------------------------------
 
-drop table if exists  Menus;
+drop table if exists Menus;
 create table Menus(
 menuid int primary key auto_increment,
 menuname char(50) not null,
@@ -196,7 +196,7 @@ constraint menufk foreign key(menuid) references Menus(menuid) on delete cascade
 
 drop procedure if exists create_food;
 DELIMITER //
-create procedure create_food(in menuid int, in fname char (50), in price double)
+create procedure create_food(in menuid int, in fname char(50), in price double)
 begin
 insert into Food(menuid, fname,price)
 values(menuid, fname, price);
@@ -370,6 +370,34 @@ call create_food(13, 'Dried Bean Curd',4.00);
 call create_food(13, 'Iced Bean Curd',4.00);
 call create_food(13, 'Udon',2.95);
 
+select * from Food;
+
+drop table if exists Orders;
+create table Orders(
+oid int primary key auto_increment,
+datecreated timestamp default CURRENT_TIMESTAMP,
+cid int default null,
+rid int default null,
+did int default null,
+address char(100) not null,
+price double default 0.0,
+ostatus char(50) default 'inCart', -- inCart, submitted, waitAllocate, delivering, finished
+constraint customer_foreign_key foreign key(cid) references Customers(cid) on delete set null on update cascade,
+constraint restaurant_foreign_key foreign key(rid) references Restaurants(rid) on delete set null on update cascade,
+constraint deliveryMan_foreign_key foreign key(did) references Deliverymen(did) on delete set null on update cascade
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+drop table if exists food_ordered;
+create table food_ordered(
+oid int not null,
+fid int not null,
+quantity int default 1,
+primary key(oid,fid),
+constraint order_foreign_key foreign key(oid) references Orders(oid) on delete cascade on update cascade,
+constraint food_foreign_key foreign key(fid) references Food(fid) on delete cascade on update cascade
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 
 -- ---------------------------------   the above code was changed by Frank and his bunny  ---------------------------------
@@ -395,33 +423,6 @@ rid int not null,
 fname char(50) not null,
 price double not null,
 constraint ridfk foreign key(rid) references Restaurants(rid) on delete cascade on update cascade
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-drop table if exists Orders;
-create table Orders(
-oid int primary key auto_increment,
-datecreated char(20) not null,
-cid int default null,
-rid int default null,
-did int default null,
-address char(50) not null,
-price double default 0,
-ostatus char(50) default 'in cart',
-constraint cfk2 foreign key(cid) references Customers(cid) on delete set null on update cascade,
-constraint rfk2 foreign key(rid) references Restaurants(rid) on delete set null on update cascade,
-constraint dfk2 foreign key(did) references Deliverymen(did) on delete set null on update cascade
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-drop table if exists food_ordered;
-create table food_ordered(
-oid int not null,
-fid int not null,
-quantity int default 1,
-primary key(oid,fid),
-constraint ofk foreign key(oid) references Orders(oid) on delete cascade on update cascade,
-constraint ffk2 foreign key(fid) references Food(fid) on delete cascade on update cascade
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
