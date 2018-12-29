@@ -16,6 +16,7 @@ router.get('/queryRestList', async function(req, res, next) {
   let seachWhere = getParams.searchKey === '' ? '' : `where ${searchType} like '%${getParams.searchKey}%'`;
   try {
     let sqlResult = await querySql(`select * from Restaurants ${seachWhere};`);
+    console.log(`select * from Restaurants ${seachWhere};`)
     let sqlValue = JSON.parse(JSON.stringify(sqlResult.data))
     if (sqlResult.code === 0) {
       res.status(200).json({code: 0, data: sqlValue});

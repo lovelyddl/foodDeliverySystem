@@ -115,7 +115,7 @@ create table Restaurants(
 rid int primary key auto_increment,
 rname char(50) not null,
 address char(100) not null,
-zipcode int not null,
+zipcode char(10) not null,
 restype char(30) not null,
 opentime char(100) not null,
 managerid int default null,
@@ -125,7 +125,7 @@ constraint mfk foreign key(managerid) references Managers(managerid) on delete s
 
 drop procedure if exists create_restaurant;
 DELIMITER //
-create procedure create_restaurant(in rname char (50), in address char(100), in zipcode int, in restype char(30), in opentime char(100), in managerid int)
+create procedure create_restaurant(in rname char (50), in address char(100), in zipcode char(10), in restype char(30), in opentime char(100), in managerid int)
 begin
 insert into Restaurants(rname, address, zipcode, restype, opentime, managerid)
 values(rname, address, zipcode, restype, opentime, managerid);
@@ -133,20 +133,20 @@ end //
 DELIMITER ;
 
 select * from Restaurants;
-
-call create_restaurant('Qdoba', '393 Huntington Ave, Boston, MA',02115, 'Mexican', '10am to 10pm', 2);  
-call create_restaurant('Ginger Exchange', '250 Huntington Ave, Boston, MA',02115, 'Vietnamese', '11:30am to 11pm', 1);  
-call create_restaurant('Ichiban Yakitori Sushi House', '14 Westland Ave, Boston, MA',02115, 'Yakitori, Japanese', '11:30am to 10pm', 1);  
-call create_restaurant('Gyu-Kaku Japanese BBQ', '16-18 Eliot St, Cambridge, MA', 02138, 'Japanese', '11"30am to 10:30pm', 2);  
-call create_restaurant('Hokkaido Santouka Ramen', '1 Bow St, Cambridge, MA',02138, 'Ramen', '11am to 9:30pm', 1);  
-call create_restaurant('The Hourly Oyster House', '15 Dunster St, Cambridge, MA',02138, 'Seafood, Oyster, Bar', '11am to 12am', 2);  
-call create_restaurant('Hanmaru', '168 Harvard Ave, Allston, MA', 02134, 'Korean', '11am to 10pm', 2);  
-call create_restaurant('Kaju Tofu House', '56 Harvard Ave, Allston, MA',02134, 'Korean', '11am to 10pm', 2);  
-call create_restaurant('FIve Spices House', '58 Beach St, Boston, MA',02111, 'Chinese', '11am to 10:45pm', 2);  
-call create_restaurant('Hi B3ar Ice Cream Roll', '147 Brighton Ave, Allston, MA',02134, 'Ice Cream', '11:30am to 11pm', 2);  
-call create_restaurant('Duoduo Fat Foods', '920 Love St, Boston, MA', 94520, 'Fat Food', '24 Hours', 2);
-call create_restaurant('Leilei Healthy Foods', '226 Love St, Boston, MA', 94520, 'Healthy', '24 Hours', 1);
-call create_restaurant('The Q', '660 Washington St, Boston, MA', 02111, 'Hot Pot, Chinese', '11:30am to 11pm', 2);
+select * from Restaurants where zipcode like '%02115%';
+call create_restaurant('Qdoba', '393 Huntington Ave, Boston, MA', '02115', 'Mexican', '10am to 10pm', 2);  
+call create_restaurant('Ginger Exchange', '250 Huntington Ave, Boston, MA', '02115', 'Vietnamese', '11:30am to 11pm', 1);  
+call create_restaurant('Ichiban Yakitori Sushi House', '14 Westland Ave, Boston, MA', '02115', 'Yakitori, Japanese', '11:30am to 10pm', 1);  
+call create_restaurant('Gyu-Kaku Japanese BBQ', '16-18 Eliot St, Cambridge, MA', '02138', 'Japanese', '11"30am to 10:30pm', 2);  
+call create_restaurant('Hokkaido Santouka Ramen', '1 Bow St, Cambridge, MA', '02138', 'Ramen', '11am to 9:30pm', 1);  
+call create_restaurant('The Hourly Oyster House', '15 Dunster St, Cambridge, MA', '02138', 'Seafood, Oyster, Bar', '11am to 12am', 2);  
+call create_restaurant('Hanmaru', '168 Harvard Ave, Allston, MA', '02134', 'Korean', '11am to 10pm', 2);  
+call create_restaurant('Kaju Tofu House', '56 Harvard Ave, Allston, MA', '02134', 'Korean', '11am to 10pm', 2);  
+call create_restaurant('FIve Spices House', '58 Beach St, Boston, MA', '02111', 'Chinese', '11am to 10:45pm', 2);  
+call create_restaurant('Hi B3ar Ice Cream Roll', '147 Brighton Ave, Allston, MA', '02134', 'Ice Cream', '11:30am to 11pm', 2);  
+call create_restaurant('Duoduo Fat Foods', '920 Love St, Boston, MA', '94520', 'Fat Food', '24 Hours', 2);
+call create_restaurant('Leilei Healthy Foods', '226 Love St, Boston, MA', '94520', 'Healthy', '24 Hours', 1);
+call create_restaurant('The Q', '660 Washington St, Boston, MA', '02111', 'Hot Pot, Chinese', '11:30am to 11pm', 2);
 
 -- ---------------------------------   Menus operations   ---------------------------------
 
