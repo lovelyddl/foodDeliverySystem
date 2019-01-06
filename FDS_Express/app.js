@@ -44,7 +44,7 @@ app.use(session({
   secret:'express_react_cookie',
   resave: true,
   saveUninitialized: true,
-  cookie: {maxAge: 60 * 1000 * 20} // session expired time
+  cookie: {maxAge: 60 * 1000 * 40} // session expired time
 }))
 // first class router
 app.use('/', indexRouter);
