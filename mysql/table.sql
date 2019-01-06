@@ -56,9 +56,9 @@ DELIMITER ;
 call create_customer('jingyi', 4444444444, 'jingyi@jy.com', '12345678');
 call create_customer('houyi', 5555555555, 'houyi@hou.com', '12345678');
 
-select * from Customers;
-select * from Customers where cname = 'houyi';
-select * from Customers where cphone = 5555555555;
+-- select * from Customers;
+-- select * from Customers where cname = 'houyi';
+-- select * from Customers where cphone = 5555555555;
 
 -- ---------------------------------   Deliverymen operations   ---------------------------------
 drop table if exists  Deliverymen;
@@ -82,7 +82,7 @@ DELIMITER ;
 
 call create_deliverymen('yuaiai', 3333333333, 'yu@yu.com', '12345678');
 
-select * from Deliverymen;
+-- select * from Deliverymen;
 
 -- ---------------------------------   Mangagers operations   ---------------------------------
 
@@ -132,8 +132,9 @@ values(rname, address, zipcode, restype, opentime, managerid);
 end //
 DELIMITER ;
 
-select * from Restaurants;
-select * from Restaurants where zipcode like '%02115%';
+-- select * from Restaurants;
+-- select * from Restaurants where zipcode like '%02115%';
+
 call create_restaurant('Qdoba', '393 Huntington Ave, Boston, MA', '02115', 'Mexican', '10am to 10pm', 2);  
 call create_restaurant('Ginger Exchange', '250 Huntington Ave, Boston, MA', '02115', 'Vietnamese', '11:30am to 11pm', 1);  
 call create_restaurant('Ichiban Yakitori Sushi House', '14 Westland Ave, Boston, MA', '02115', 'Yakitori, Japanese', '11:30am to 10pm', 1);  
@@ -381,13 +382,17 @@ rid int default null,
 did int default null,
 address char(100) not null,
 price double default 0.0,
-ostatus char(50) default 'inCart', -- inCart, submitted, waitAllocate, delivering, finished
+ostatus char(50) default 'inCart', -- inCart, assigning, delivering, finished
 constraint customer_foreign_key foreign key(cid) references Customers(cid) on delete set null on update cascade,
 constraint restaurant_foreign_key foreign key(rid) references Restaurants(rid) on delete set null on update cascade,
 constraint deliveryMan_foreign_key foreign key(did) references Deliverymen(did) on delete set null on update cascade
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- default oid = 1
+insert into Orders(cid, rid, did, address, price, ostatus) values(1, 1, 1, 'westland Ave 16, Boston', 26.6, 'assigning');
+select * from Orders;
 
+-- this table includes all food and their quantity for orders 
 drop table if exists food_ordered;
 create table food_ordered(
 oid int not null,
@@ -398,7 +403,12 @@ constraint order_foreign_key foreign key(oid) references Orders(oid) on delete c
 constraint food_foreign_key foreign key(fid) references Food(fid) on delete cascade on update cascade
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- first order food
+insert into food_ordered(oid, fid) values(1, 1);
+insert into food_ordered(oid, fid, quantity) values(1, 2, 2);
+insert into food_ordered(oid, fid) values(1, 3);
 
+select * from food_ordered;
 
 -- ---------------------------------   the above code was changed by Frank and his bunny  ---------------------------------
 /*
