@@ -137,7 +137,7 @@ select * from Restaurants;
 call create_restaurant('Qdoba', '393 Huntington Ave, Boston, MA',02115, 'Mexican', '10am to 10pm', 2);  
 call create_restaurant('Ginger Exchange', '250 Huntington Ave, Boston, MA',02115, 'Vietnamese', '11:30am to 11pm', 1);  
 call create_restaurant('Ichiban Yakitori Sushi House', '14 Westland Ave, Boston, MA',02115, 'Yakitori, Japanese', '11:30am to 10pm', 1);  
-call create_restaurant('Gyu-Kaku Japanese BBQ', '16-18 Eliot St, Cambridge, MA', 02138, 'Japanese', '11"30am to 10:30pm', 2);  
+call create_restaurant('Gyu-Kaku Japanese BBQ', '16-18 Eliot St, Cambridge, MA', 02138, 'Japanese', '11:30am to 10:30pm', 2);  
 call create_restaurant('Hokkaido Santouka Ramen', '1 Bow St, Cambridge, MA',02138, 'Ramen', '11am to 9:30pm', 1);  
 call create_restaurant('The Hourly Oyster House', '15 Dunster St, Cambridge, MA',02138, 'Seafood, Oyster, Bar', '11am to 12am', 2);  
 call create_restaurant('Hanmaru', '168 Harvard Ave, Allston, MA', 02134, 'Korean', '11am to 10pm', 2);  
@@ -180,7 +180,6 @@ call create_menu('Hi B3ar Ice Cream Roll', 10);
 call create_menu('Duoduo Fat Foods Collection', 11); 
 call create_menu('Leilei Healthy Foods Collection', 12); 
 call create_menu('The Q Hot Pot Menu', 13); 
-
 
 
 -- ---------------------------------   Food operations   ---------------------------------
@@ -369,6 +368,10 @@ call create_food(13, 'Fried Tofu Skin',6.00);
 call create_food(13, 'Dried Bean Curd',4.00);
 call create_food(13, 'Iced Bean Curd',4.00);
 call create_food(13, 'Udon',2.95);
+
+-- select * from Food where menuid = 1;
+
+select * from Food where menuid =  (select menuid from Menus where rid = 1);
 
 
 

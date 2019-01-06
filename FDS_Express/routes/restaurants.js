@@ -13,12 +13,30 @@ router.get('/queryRestList', async function(req, res, next) {
     '': '*'
   };
   let searchType = seachTypes[getParams.listType];
-  let seachWhere = getParams.searchKey === '' ? '' : `where ${searchType} like '%${getParams.searchKey}%'`;
+  let searchWhere = getParams.searchKey === '' ? '' : `where ${searchType} like '%${getParams.searchKey}%'`;
   try {
-    let sqlResult = await querySql(`select * from Restaurants ${seachWhere};`);
+    let sqlResult = await querySql(`select * from Restaurants ${searchWhere};`);
     let sqlValue = JSON.parse(JSON.stringify(sqlResult.data))
     if (sqlResult.code === 0) {
       res.status(200).json({code: 0, data: sqlValue});
+    }
+  } catch (error) {
+    console.log(error)
+    if (error.code === 1) {
+      res.status(200).send({code: 1, error: error.message });
+    } else if (error.code === 2) {
+      res.status(200).send({code: 1, error: 'fail to query data' });
+    }
+  }
+})
+
+router.get('/detail', async function(req, res, next) {
+  let rid = req.query.resid;
+  try {
+    let resResult = await querySql(`select * from Food where menuid =  (select menuid from Menus where rid = ${rid});`);
+    let resValue = JSON.parse(JSON.stringify(resResult.data))
+    if (resResult.code === 0) {
+      res.status(200).json({code: 0, data: resValue}); //get all food of this restaurant
     }
   } catch (error) {
     console.log(error)
