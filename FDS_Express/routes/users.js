@@ -65,10 +65,10 @@ router.get('/detail', async function(req, res, next) {
     let user = checkNames[getParams.role];
     try {
       let sqlResult = await querySql(`select * from ${user.table} where ${user.userName} = '${getParams.userName}';`);
-      let sqlValue = JSON.parse(JSON.stringify(sqlResult.data))
-      console.log(sqlValue[0])
-      let userData = sqlValue[0];
       if (sqlResult.code === 0) {
+        let sqlValue = JSON.parse(JSON.stringify(sqlResult.data))
+        console.log(sqlValue[0])
+        let userData = sqlValue[0];
         res.status(200).json({code: 0, userInfo: {
             userName: userData[user.userName],
             phone: userData[user.phone],
@@ -80,6 +80,7 @@ router.get('/detail', async function(req, res, next) {
       }
     } catch (error) {
       console.log(error)
+      res.status(200).send({code: 1, error: error.message });
     }
   } else {
     res.status(200).send({code: 1, error: 'Please provide userName and role' });
@@ -140,8 +141,8 @@ router.post('/editUser', async function(req, res, next) {
         if (error === 'failed to connect') {
           res.status(200).send({code: 1, error: 'fail to connect database' });
         } else if (error === 'failed to operate database') {
-          console.log('用户注册失败');
-          res.status(200).send({code: 1, error: 'failed to register' });
+          console.log('用户修改信息失败');
+          res.status(200).send({code: 1, error: 'failed to edit user information' });
         }
       }
     } else {
@@ -171,11 +172,11 @@ router.post('/signup', async function(req, res, next) {
         }
       } catch (error) {
         console.log(error)
-        if (error === 'failed to connect') {
-          res.status(200).send({code: 1, error: 'fail to connect database' });
+        if (error === 'failed to connect database: ') {
+          res.status(200).send({code: 1, error: 'fail to connect database !!!' });
         } else if (error === 'failed to operate database') {
           console.log('用户注册失败');
-          res.status(200).send({code: 1, error: 'failed to register' });
+          res.status(200).send({code: 1, error: 'failed to register !!!' });
         }
       }
     } else {

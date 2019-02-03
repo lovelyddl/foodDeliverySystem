@@ -183,6 +183,7 @@ call create_menu('Leilei Healthy Foods Collection', 12);
 call create_menu('The Q Hot Pot Menu', 13); 
 
 
+
 -- ---------------------------------   Food operations   ---------------------------------
 
 drop table if exists Food;
